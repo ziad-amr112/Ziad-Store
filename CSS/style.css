@@ -1164,3 +1164,6 @@ footer .bottom_footer .payment_img {
   background: transparent;
   color: var(--main-color);
 }
+.checkout input:focus{
+  border-color: var(--main-color);
+}

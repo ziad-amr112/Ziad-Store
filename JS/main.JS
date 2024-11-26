@@ -34,12 +34,17 @@ fetch("products.json")
       });
     });
   });
-function addToCart(product) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({ ...product, quantity: 1 });
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCart();
-}
+  function addToCart(product) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingProduct = cart.find((item) => item.id === product.id);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCart();
+  }
 function updateCart() {
   const cartItemsContainer = document.getElementById("cart_items");
 
@@ -150,13 +155,20 @@ function updateButonsState(productId) {
   });
 }
 document.addEventListener("DOMContentLoaded", () => {
-  let orderItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const itemsContainer = document.getElementById("order-items");
+  const itemsContainer = document.getElementById("order-items"); 
+  document.addEventListener("DOMContentLoaded", () => {
+    const itemsContainer = document.getElementById("order-items");
+    if (itemsContainer) {
+      renderOrderItems();
+    }
+  });
+  
   const subtotalElement = document.getElementById("subtotal");
   const totalElement = document.getElementById("total");
 
-  // تحديث العناصر في الـ DOM
+  let orderItems = JSON.parse(localStorage.getItem("cart")) || [];
+  
   function renderOrderItems() {
     itemsContainer.innerHTML = "";
 
